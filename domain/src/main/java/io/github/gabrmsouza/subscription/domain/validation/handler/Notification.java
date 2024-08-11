@@ -23,7 +23,7 @@ public class Notification implements ValidationHandler {
     }
 
     public static Notification create(final Throwable anError) {
-        return create(new Error(anError.getMessage()));
+        return create(Error.with(anError.getMessage()));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Notification implements ValidationHandler {
         } catch (final DomainException ex) {
             errors.addAll(ex.getErrors());
         } catch (final Throwable t) {
-            errors.add(new Error(t.getMessage()));
+            errors.add(Error.with(t.getMessage()));
         }
         return null;
     }

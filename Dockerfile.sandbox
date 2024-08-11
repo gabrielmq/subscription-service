@@ -3,7 +3,7 @@
 # docker run subscription
 
 # build stage
-FROM gradle:7.6.1-jdk17-alpine AS builder
+FROM gradle:8.7.0-jdk21-alpine AS builder
 
 WORKDIR /usr/app/
 
