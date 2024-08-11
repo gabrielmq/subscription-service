@@ -1,0 +1,25 @@
+plugins {
+    id 'java-library'
+    id 'java-conventions'
+}
+
+group 'io.github.io.github.gabrmsouza.subscription.domain'
+
+dependencies {
+    testImplementation("net.datafaker:datafaker:2.3.0")
+}
+
+configurations {
+    testClasses {
+        extendsFrom(testImplementation)
+    }
+}
+
+task testJar(type: Jar) {
+    archiveClassifier.set('test')
+    from(sourceSets.test.output)
+}
+
+artifacts {
+    testClasses testJar
+}

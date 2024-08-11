@@ -1,0 +1,6 @@
+rootProject.name = 'subscription-service'
+
+include 'domain'
+include 'application'
+include 'infrastructure'
+
