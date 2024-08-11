@@ -20,6 +20,10 @@ public class DomainException extends NoStacktraceException {
         return new DomainException("", anErrors);
     }
 
+    public static DomainException with(final String aMessage) {
+        return new DomainException(aMessage, List.of(Error.with(aMessage)));
+    }
+
     public List<Error> getErrors() {
         return errors;
     }
