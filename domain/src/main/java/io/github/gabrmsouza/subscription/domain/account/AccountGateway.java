@@ -1,6 +1,6 @@
 package io.github.gabrmsouza.subscription.domain.account;
 
-import io.github.gabrmsouza.subscription.domain.account.iam.UserId;
+import io.github.gabrmsouza.subscription.domain.account.idp.UserId;
 
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package io.github.gabrmsouza.subscription.domain.account;
 
 import io.github.gabrmsouza.subscription.domain.AggregateRoot;
-import io.github.gabrmsouza.subscription.domain.account.iam.UserId;
+import io.github.gabrmsouza.subscription.domain.account.idp.UserId;
 import io.github.gabrmsouza.subscription.domain.person.Address;
 import io.github.gabrmsouza.subscription.domain.person.Document;
 import io.github.gabrmsouza.subscription.domain.person.Email;
