@@ -8,7 +8,7 @@ import io.github.gabrmsouza.subscription.domain.subscription.SubscriptionCommand
 import io.github.gabrmsouza.subscription.domain.subscription.SubscriptionCommand.ChangeStatus;
 import io.github.gabrmsouza.subscription.domain.subscription.SubscriptionCommand.IncompleteSubscription;
 import io.github.gabrmsouza.subscription.domain.subscription.SubscriptionCommand.RenewSubscription;
-import io.github.gabrmsouza.subscription.domain.subscription.status.SubscriptionStatus;
+import io.github.gabrmsouza.subscription.domain.subscription.status.*;
 import io.github.gabrmsouza.subscription.domain.utils.InstantUtils;
 
 import java.time.Instant;
@@ -133,6 +133,26 @@ public class Subscription extends AggregateRoot<SubscriptionId> {
 
     public Instant updatedAt() {
         return updatedAt;
+    }
+
+    public boolean isTrail() {
+        return this.status instanceof TrailingSubscriptionStatus;
+    }
+
+    public boolean isActive() {
+        return this.status instanceof ActiveSubscriptionStatus;
+    }
+
+    public boolean isCanceled() {
+        return this.status instanceof CanceledSubscriptionStatus;
+    }
+
+    public boolean isIncomplete() {
+        return this.status instanceof IncompleteSubscriptionStatus;
+    }
+
+    public boolean isExpired() {
+        return dueDate().isBefore(LocalDate.now());
     }
 
     private void apply(final IncompleteSubscription cmd) {
