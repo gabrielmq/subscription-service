@@ -1,6 +1,9 @@
 package io.github.gabrmsouza.subscription.domain;
 
 
+import io.github.gabrmsouza.subscription.domain.money.Money;
+import io.github.gabrmsouza.subscription.domain.plan.Plan;
+import io.github.gabrmsouza.subscription.domain.plan.PlanId;
 import net.datafaker.Faker;
 
 public final class Fixture {
@@ -8,27 +11,16 @@ public final class Fixture {
 
     private Fixture() {}
 
-    public static String name() {
-        return FAKER.name().fullName();
-    }
+    public static final class Plans {
 
-    public static String title() {
-        return FAKER.options().option("Title 1", "Title 2", "Title 3");
-    }
-
-    public static int year() {
-        return FAKER.random().nextInt(2020, 2030);
-    }
-
-    public static double duration() {
-        return FAKER.options().option(120.0, 15.5, 35.5, 10.0, 2.0);
-    }
-
-    public static boolean bool() {
-        return FAKER.bool().bool();
-    }
-
-    public static String checksum() {
-        return "03fe62de";
+        public static Plan plus() {
+            return Plan.newPlan(
+                    new PlanId(123L),
+                    "Plus",
+                    FAKER.text().text(100, 500),
+                    true,
+                    new Money("BRL", 20D)
+            );
+        }
     }
 }
