@@ -1,6 +1,6 @@
-package io.github.gabrmsouza.subscription.infrastructure.authentication;
+package io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials;
 
-import io.github.gabrmsouza.subscription.infrastructure.JacksonTest;
+import io.github.gabrmsouza.subscription.JacksonTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;

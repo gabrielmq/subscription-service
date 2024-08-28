@@ -1,9 +1,9 @@
-package io.github.gabrmsouza.subscription.infrastructure.authentication;
+package io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials;
 
-import io.github.gabrmsouza.subscription.infrastructure.AbstractRestClientTest;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.AuthenticationGateway.ClientCredentialsInput;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.AuthenticationGateway.RefreshTokenInput;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.KeycloakAuthenticationGateway.KeycloakAuthenticationResult;
+import io.github.gabrmsouza.subscription.AbstractRestClientTest;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.AuthenticationGateway.ClientCredentialsInput;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.AuthenticationGateway.RefreshTokenInput;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.KeycloakAuthenticationGateway.KeycloakAuthenticationResult;
 import io.github.gabrmsouza.subscription.infrastructure.json.Json;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,10 @@
-package io.github.gabrmsouza.subscription.infrastructure.authentication;
+package io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials;
 
 import io.github.gabrmsouza.subscription.domain.exceptions.InternalErrorException;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.AuthenticationGateway.AuthenticationResult;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.AuthenticationGateway.ClientCredentialsInput;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.AuthenticationGateway.RefreshTokenInput;
-import io.github.gabrmsouza.subscription.infrastructure.authentication.ClientCredentialsManager.ClientCredentials;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.AuthenticationGateway.AuthenticationResult;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.AuthenticationGateway.ClientCredentialsInput;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.AuthenticationGateway.RefreshTokenInput;
+import io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials.ClientCredentialsManager.ClientCredentials;
 import io.github.gabrmsouza.subscription.infrastructure.configuration.properties.KeycloakProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

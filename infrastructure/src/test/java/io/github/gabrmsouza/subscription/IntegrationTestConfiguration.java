@@ -1,4 +1,4 @@
-package io.github.gabrmsouza.subscription.infrastructure;
+package io.github.gabrmsouza.subscription;
 
 import org.springframework.boot.test.context.TestConfiguration;
 

@@ -1,4 +1,4 @@
-package io.github.gabrmsouza.subscription.infrastructure.authentication;
+package io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials;
 
 import io.github.gabrmsouza.subscription.domain.exceptions.InternalErrorException;
 import io.github.gabrmsouza.subscription.infrastructure.configuration.annontations.Keycloak;

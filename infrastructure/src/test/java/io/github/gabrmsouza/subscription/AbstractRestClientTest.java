@@ -1,4 +1,4 @@
-package io.github.gabrmsouza.subscription.infrastructure;
+package io.github.gabrmsouza.subscription;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import io.github.gabrmsouza.subscription.infrastructure.configuration.WebServerConfiguration;

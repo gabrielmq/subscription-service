@@ -1,4 +1,4 @@
-package io.github.gabrmsouza.subscription.infrastructure;
+package io.github.gabrmsouza.subscription;
 
 import io.github.gabrmsouza.subscription.infrastructure.configuration.WebServerConfiguration;
 import org.junit.jupiter.api.Tag;

@@ -1,4 +1,4 @@
-package io.github.gabrmsouza.subscription.infrastructure.authentication;
+package io.github.gabrmsouza.subscription.infrastructure.authentication.clientcredentials;
 
 public interface AuthenticationGateway {
     AuthenticationResult login(ClientCredentialsInput input);

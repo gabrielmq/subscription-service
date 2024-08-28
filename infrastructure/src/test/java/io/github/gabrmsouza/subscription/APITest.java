@@ -1,4 +1,4 @@
-package io.github.gabrmsouza.subscription.infrastructure;
+package io.github.gabrmsouza.subscription;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
