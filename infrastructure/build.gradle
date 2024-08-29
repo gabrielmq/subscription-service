@@ -38,6 +38,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-undertow')
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.boot:spring-boot-starter-oauth2-resource-server')
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdoc") {
         exclude group: 'org.springdoc', module: 'springdoc-openapi-ui'

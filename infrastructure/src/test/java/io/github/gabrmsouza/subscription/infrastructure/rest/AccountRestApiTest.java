@@ -1,0 +1,134 @@
+package io.github.gabrmsouza.subscription.infrastructure.rest;
+
+import io.github.gabrmsouza.subscription.ControllerTest;
+import io.github.gabrmsouza.subscription.application.account.UpdateBillingInfo;
+import io.github.gabrmsouza.subscription.domain.account.AccountId;
+import io.github.gabrmsouza.subscription.domain.person.Document;
+import io.github.gabrmsouza.subscription.infrastructure.mediator.SignUpMediator;
+import io.github.gabrmsouza.subscription.infrastructure.rest.controllers.AccountRestController;
+import io.github.gabrmsouza.subscription.infrastructure.rest.models.request.SignUpRequest;
+import io.github.gabrmsouza.subscription.infrastructure.rest.models.response.SignUpResponse;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@ControllerTest(controllers = AccountRestController.class)
+public class AccountRestApiTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @MockBean
+    private SignUpMediator signUpMediator;
+
+    @MockBean
+    private UpdateBillingInfo updateBillingInfo;
+
+    @Captor
+    private ArgumentCaptor<SignUpRequest> signUpRequestCaptor;
+
+    @Test
+    public void givenValidInput_whenSignUpSuccessfully_shouldReturnAccountId() throws Exception {
+        // given
+        var expectedFirstname = "John";
+        var expectedLastname = "Doe";
+        var expectedEmail = "john@gmail.com";
+        var expectedDocumentType = Document.Cpf.TYPE;
+        var expectedDocumentNumber = "12312312323";
+        var expectedPassword = "12312312323";
+        var expectedAccountId = new AccountId("ACC-123");
+
+        when(signUpMediator.signUp(any())).thenReturn(new SignUpResponse(expectedAccountId.value()));
+
+        var json = """
+                {
+                    "firstname": "%s",
+                    "lastname": "%s",
+                    "email": "%s",
+                    "document_type": "%s",
+                    "document_number": "%s",
+                    "password": "%s"
+                }
+                """.formatted(expectedFirstname, expectedLastname, expectedEmail, expectedDocumentType, expectedDocumentNumber, expectedPassword);
+
+        // when
+        var aRequest = post("/accounts/sign-up")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(json);
+
+        var aResponse = this.mvc.perform(aRequest);
+
+        // then
+        aResponse
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/accounts/" + expectedAccountId.value()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.account_id").value(equalTo(expectedAccountId.value())));
+
+        verify(signUpMediator, times(1)).signUp(signUpRequestCaptor.capture());
+
+        var actualRequest = signUpRequestCaptor.getValue();
+
+        assertEquals(expectedFirstname, actualRequest.firstname());
+        assertEquals(expectedLastname, actualRequest.lastname());
+        assertEquals(expectedEmail, actualRequest.email());
+        assertEquals(expectedDocumentType, actualRequest.documentType());
+        assertEquals(expectedDocumentNumber, actualRequest.documentNumber());
+        assertEquals(expectedPassword, actualRequest.password());
+    }
+
+    @Test
+    public void givenEmptyFirstname_shouldReturnError() throws Exception {
+        // given
+        var expectedFirstname = " ";
+        var expectedLastname = "Doe";
+        var expectedEmail = "john@gmail.com";
+        var expectedDocumentType = Document.Cpf.TYPE;
+        var expectedDocumentNumber = "12312312323";
+        var expectedPassword = "12312312323";
+        var expectedErrorProperty = "firstname";
+        var expectedErrorMessage = "must not be blank";
+
+        var json = """
+                {
+                    "firstname": "%s",
+                    "lastname": "%s",
+                    "email": "%s",
+                    "document_type": "%s",
+                    "document_number": "%s",
+                    "password": "%s"
+                }
+                """.formatted(expectedFirstname, expectedLastname, expectedEmail, expectedDocumentType, expectedDocumentNumber, expectedPassword);
+
+        // when
+        var aRequest = post("/accounts/sign-up")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(json);
+
+        var aResponse = this.mvc.perform(aRequest);
+
+        // then
+        aResponse
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].property", equalTo(expectedErrorProperty)))
+                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        verify(signUpMediator, times(0)).signUp(any());
+    }
+}
