@@ -5,6 +5,7 @@ import io.github.gabrmsouza.subscription.domain.subscription.Subscription;
 import io.github.gabrmsouza.subscription.domain.subscription.SubscriptionGateway;
 import io.github.gabrmsouza.subscription.domain.subscription.SubscriptionId;
 import io.github.gabrmsouza.subscription.domain.utils.IDUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Profile("dev")
 public class SubscriptionMemoryRepository implements SubscriptionGateway {
 
     private final Map<String, Subscription> db = new ConcurrentHashMap<>();
