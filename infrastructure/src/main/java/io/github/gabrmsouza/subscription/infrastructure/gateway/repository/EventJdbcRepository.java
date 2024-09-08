@@ -1,0 +1,99 @@
+package io.github.gabrmsouza.subscription.infrastructure.gateway.repository;
+
+import io.github.gabrmsouza.subscription.domain.DomainEvent;
+import io.github.gabrmsouza.subscription.domain.utils.InstantUtils;
+import io.github.gabrmsouza.subscription.infrastructure.jdbc.DatabaseClient;
+import io.github.gabrmsouza.subscription.infrastructure.jdbc.JdbcUtils;
+import io.github.gabrmsouza.subscription.infrastructure.jdbc.RowMap;
+import io.github.gabrmsouza.subscription.infrastructure.json.Json;
+import org.springframework.stereotype.Repository;
+
+import java.time.Instant;
+import java.util.*;
+
+@Repository
+public class EventJdbcRepository {
+
+    private final DatabaseClient database;
+
+    public EventJdbcRepository(final DatabaseClient databaseClient) {
+        this.database = Objects.requireNonNull(databaseClient);
+    }
+
+    public Optional<DomainEvent> eventOfIdAndUnprocessed(final Long eventId) {
+        final var sql = "SELECT event_id, processed, aggregate_id, aggregate_type, event_type, event_date, event_data FROM events WHERE event_id = :eventId AND processed = false";
+        final var params = Map.<String, Object>of("eventId", eventId);
+        return this.database.queryOne(sql, params, eventMapper())
+                .map(this::toDomainEvent);
+    }
+
+    public List<DomainEvent> allEventsOfAggregate(final String aggregateId, final String aggregateType) {
+        final var sql = "SELECT event_id, processed, aggregate_id, aggregate_type, event_type, event_date, event_data FROM events WHERE aggregate_id = :aggregateId and aggregate_type = :aggregateType";
+        final var params = Map.<String, Object>of("aggregateId", aggregateId, "aggregateType", aggregateType);
+        return this.database.query(sql, params, eventMapper()).stream()
+                .map(this::toDomainEvent)
+                .toList();
+    }
+
+    public void markAsProcessed(final Long eventId) {
+        final var sql = "UPDATE events SET processed = true WHERE event_id = :id";
+        if (this.database.update(sql, Map.of("id", eventId)) == 0) {
+            throw new IllegalArgumentException("Event with id %s was not found".formatted(eventId));
+        }
+    }
+
+    public void saveAll(final Collection<DomainEvent> events) {
+        for (var ev : events) {
+            this.insertEvent(Event.newEvent(ev.aggregateId(), ev.aggregateType(), ev.getClass().getCanonicalName(), Json.writeValueAsString(ev)));
+        }
+    }
+
+    private void insertEvent(final Event event) {
+        final var sql = "INSERT INTO events (processed, aggregate_id, aggregate_type, event_type, event_date, event_data) VALUES (:processed, :aggregateId, :aggregateType, :eventType, :eventDate, :eventData)";
+
+        final var params = new HashMap<String, Object>();
+        params.put("processed", event.processed());
+        params.put("aggregateId", event.aggregateId());
+        params.put("aggregateType", event.aggregateType());
+        params.put("eventType", event.eventType());
+        params.put("eventDate", event.eventDate());
+        params.put("eventData", event.eventData());
+
+        this.database.update(sql, params);
+    }
+
+    private DomainEvent toDomainEvent(final Event event) {
+        try {
+            return (DomainEvent) Json.readTree(event.eventData(), Class.forName(event.eventType()));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private RowMap<Event> eventMapper() {
+        return (rs) -> new Event(
+                rs.getLong("event_id"),
+                rs.getBoolean("processed"),
+                rs.getString("aggregate_id"),
+                rs.getString("aggregate_type"),
+                rs.getString("event_type"),
+                JdbcUtils.getInstant(rs, "event_date"),
+                rs.getString("event_data")
+        );
+    }
+
+    private record Event(
+            Long eventId,
+            boolean processed,
+            String aggregateId,
+            String aggregateType,
+            String eventType,
+            Instant eventDate,
+            String eventData
+    ) {
+
+        public static Event newEvent(String aggregateId, String aggregateType, String eventType, String data) {
+            return new Event(null, false, aggregateId, aggregateType, eventType, InstantUtils.now(), data);
+        }
+    }
+}
