@@ -5,6 +5,7 @@ import io.github.gabrmsouza.subscription.domain.account.AccountGateway;
 import io.github.gabrmsouza.subscription.domain.account.AccountId;
 import io.github.gabrmsouza.subscription.domain.account.idp.UserId;
 import io.github.gabrmsouza.subscription.domain.utils.IDUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Profile("dev")
 public class AccountInMemoryRepository implements AccountGateway {
 
     private Map<String, Account> db = new ConcurrentHashMap<>();

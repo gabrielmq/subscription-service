@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
         WebServerConfiguration.class,
         IntegrationTestConfiguration.class
 })
-public abstract class AbstractRestClientTest {
+public abstract class AbstractRestClientTest extends AbstractTest {
 
     @BeforeEach
     void setup() {
